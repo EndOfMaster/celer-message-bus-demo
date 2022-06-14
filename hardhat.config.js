@@ -7,10 +7,7 @@ const infuraId = process.env.INFURA_ID ?? "INFURA_ID";
 
 const chainIds = {
   goerli: 5,
-  kovan: 42,
-  mainnet: 1,
-  rinkeby: 4,
-  ropsten: 3,
+  'arbitrum-rinkeby': 421611
 };
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -40,7 +37,8 @@ function getChainConfig(network) {
  */
 module.exports = {
   networks: {
-    kovan: getChainConfig('kovan')
+    goerli: getChainConfig('goerli'),
+    arbTest: getChainConfig('arbitrum-rinkeby')
   },
   solidity: {
     compilers: [
