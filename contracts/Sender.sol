@@ -60,19 +60,26 @@ contract Sender is IBatchTransfer {
 
     // ============== message bus support ==============
 
+    TransferRequest public transfer;
+
+    //跨链桥出问题调用这个
     function executeMessageWithTransferRefund(
-        address _token,
-        uint256 _amount,
+        address,
+        uint256,
         bytes calldata _message
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory transfer = abi.decode(
+        TransferRequest memory _transfer = abi.decode(
             (_message),
             (TransferRequest)
         );
-        IERC20(_token).safeTransfer(transfer.sender, _amount);
+        transfer = _transfer;
+        // IERC20(_token).safeTransfer(_transfer.sender, _amount);
         return ExecutionStatus.Success;
     }
 
+    TransferRequest public transfer2;
+
+    //目标链的执行失败执行这个
     function executeMessageWithTransferFallback(
         address _sender,
         address _token,
@@ -80,25 +87,26 @@ contract Sender is IBatchTransfer {
         uint64 _srcChainId,
         bytes memory _message
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory transfer = abi.decode(
+        TransferRequest memory _transfer = abi.decode(
             (_message),
             (TransferRequest)
         );
-        IERC20(_token).safeTransfer(transfer.sender, _amount);
-        bytes memory message = abi.encode(
-            TransferReceipt({
-                nonce: transfer.nonce,
-                status: TransferStatus.Fail
-            })
-        );
+        transfer2 = _transfer;
+        // IERC20(_token).safeTransfer(_transfer.sender, _amount);
+        // bytes memory message = abi.encode(
+        //     TransferReceipt({
+        //         nonce: transfer.nonce,
+        //         status: TransferStatus.Fail
+        //     })
+        // );
 
-        MessageSenderLib.sendMessage(
-            _sender,
-            _srcChainId,
-            message,
-            messageBus,
-            msg.value
-        );
+        // MessageSenderLib.sendMessage(
+        //     _sender,
+        //     _srcChainId,
+        //     message,
+        //     messageBus,
+        //     msg.value
+        // );
         return ExecutionStatus.Success;
     }
 
