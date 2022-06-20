@@ -1,0 +1,46 @@
+# [executor]
+# enable_auto_refund = false
+# [executor.retry]
+# initial_backoff_seconds = 30 # default 30
+# interval_seconds = 30 # default 30
+# scaling_factor = 1 # default 1
+
+# [server] # optional
+# enable = true # default false
+# port = 24242
+
+[[service]] # a service represents a set of contracts and an account
+# id = "my-service" # optional if only one service is configured
+signer_keystore = "./.keystore.json"
+signer_passphrase = ""  #password
+[[service.contracts]]
+chain_id = 5
+address = "<app-contract-address>" # this contract address is used to query messages from SGN
+# allow_sender_groups = ["my-contracts"] # mount sender groups here. if not configured, sender checking is skipped
+[[service.contracts]]
+chain_id = 97
+address = "<app-contract-address>"
+# allow_sender_groups = ["my-contracts"] # you can also list multiple sender groups. message execution is allowed if a sender is found in ANY of the sender groups
+# [[service.contract_sender_groups]]
+# name = "my-contracts"
+# allow = [
+#   { chain_id = 5, address = "<app-contract-address>" },
+#   { chain_id = 97, address = "<app-contract-address>" },
+# ]
+
+[sgnd]
+sgn_grpc = "cbridge-v2-test.celer.network:9094"
+gateway_grpc = "cbridge-v2-test.celer.network:9094"
+
+[db]
+url = "localhost:26257"
+
+# [alert]
+# type = "slack" # only slack is supported for now
+# webhook = "<slack-web-hook-url>"
+# [[alert.low_gas_thresholds]]
+# chain_id = 5
+# threshold = "2000000000000000000"
+# [[alert.low_gas_thresholds]]
+# chain_id = 97
+# threshold = "1000000000000000000"

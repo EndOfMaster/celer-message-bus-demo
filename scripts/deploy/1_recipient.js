@@ -1,6 +1,6 @@
 const messageBus = {
     '5': '0xF25170F86E4291a99a9A560032Fe9948b8BcFBB2',
-    '421611': '0x7d43AABC515C356145049227CeE54B608342c0ad'
+    '97': '0xAd204986D6cB67A5Bc76a3CB8974823F43Cb9AAA'
 }
 
 module.exports = async ({ getNamedAccounts, getChainId, deployments }) => {

@@ -1,11 +1,6 @@
 const hre = require("hardhat");
 const { deployments, ethers } = hre;
 
-const chainId = {
-  goerli: 5,
-  'arbitrum-rinkeby': 421611
-}
-
 async function main() {
   //test recipient in arb test
   const recipientAddress = (await deployments.get('Recipient')).address;

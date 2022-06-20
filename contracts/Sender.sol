@@ -3,13 +3,15 @@ pragma solidity 0.8.9;
 
 import "./interface/IBatchTransfer.sol";
 import "./interface/IMessageBus.sol";
-import {MessageSenderLib, MsgDataTypes} from "./lib/MessageSenderLib.sol";
+import { MessageSenderLib, MsgDataTypes } from "./lib/MessageSenderLib.sol";
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Sender is IBatchTransfer {
     using SafeERC20 for IERC20;
+
+    event Send(bytes32 transferId);
 
     address public immutable messageBus;
 
@@ -27,35 +29,46 @@ contract Sender is IBatchTransfer {
         address _token,
         uint256 _amount,
         uint64 _dstChainId,
+        uint64 _nonce,
         uint32 _maxSlippage,
         uint256 _dataAmount
     ) external payable {
         IERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
 
         (uint256 _fee, bytes memory _data) = getFee(_dataAmount);
-        require(msg.value > _fee, "Insufficient fee");
+        require(msg.value >= _fee, "Insufficient fee");
 
-        MessageSenderLib.sendMessageWithTransfer(
+        // IERC20(_token).approve(messageBus, _amount);
+
+        bytes32 transferId = MessageSenderLib.sendMessageWithTransfer(
             _receiver,
             _token,
             _amount,
             _dstChainId,
-            uint64(block.timestamp), // nonce
+            _nonce,
             _maxSlippage,
             _data, // message
             MsgDataTypes.BridgeSendType.Liquidity, // the bridge type, we are using liquidity bridge at here
             messageBus,
             _fee
         );
+        emit Send(transferId);
     }
 
-    function getFee(uint256 _dataAmount)
-        public
-        view
-        returns (uint256, bytes memory)
-    {
+    function getFee(uint256 _dataAmount) public view returns (uint256, bytes memory) {
         bytes memory _data = abi.encode(_dataAmount);
         return (IMessageBus(messageBus).calcFee(_data), _data);
+    }
+
+    ///@dev only callstatic
+    function getLiquidityTransferId(
+        address _receiver,
+        address _token,
+        uint256 _amount,
+        uint64 _dstChainId,
+        uint64 _nonce
+    ) external view returns (bytes32 _transferId) {
+        _transferId = MessageSenderLib.computeLiqBridgeTransferId(_receiver, _token, _amount, _dstChainId, _nonce);
     }
 
     // ============== message bus support ==============
@@ -68,10 +81,7 @@ contract Sender is IBatchTransfer {
         uint256,
         bytes calldata _message
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory _transfer = abi.decode(
-            (_message),
-            (TransferRequest)
-        );
+        TransferRequest memory _transfer = abi.decode((_message), (TransferRequest));
         transfer = _transfer;
         // IERC20(_token).safeTransfer(_transfer.sender, _amount);
         return ExecutionStatus.Success;
@@ -87,10 +97,7 @@ contract Sender is IBatchTransfer {
         uint64 _srcChainId,
         bytes memory _message
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory _transfer = abi.decode(
-            (_message),
-            (TransferRequest)
-        );
+        TransferRequest memory _transfer = abi.decode((_message), (TransferRequest));
         transfer2 = _transfer;
         // IERC20(_token).safeTransfer(_transfer.sender, _amount);
         // bytes memory message = abi.encode(

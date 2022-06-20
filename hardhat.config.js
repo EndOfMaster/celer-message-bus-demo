@@ -38,7 +38,11 @@ function getChainConfig(network) {
 module.exports = {
   networks: {
     goerli: getChainConfig('goerli'),
-    arbTest: getChainConfig('arbitrum-rinkeby')
+    bscTest: {
+      url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
+      accounts: [`${privateKey}`],
+      chainId: 97,
+    }
   },
   solidity: {
     compilers: [

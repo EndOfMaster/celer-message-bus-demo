@@ -1,11 +1,6 @@
 const hre = require("hardhat");
 const { deployments, ethers } = hre;
 
-const chainId = {
-  goerli: 5,
-  'arbitrum-rinkeby': 421611
-}
-
 async function main() {
   //test sender in goerli
   const senderAddress = (await deployments.get('Sender')).address;
@@ -19,9 +14,9 @@ async function main() {
   const transfer1 = await sender.transfer();
   console.log("transfer1: ", transfer1);
 
-  let dataAmount = ethers.utils.parseEther('1000')
-  let fee = await sender.getFee(dataAmount);
-  console.log("fee: ", fee[0].toString());
+  // let dataAmount = ethers.utils.parseEther('1000')
+  // let fee = await sender.getFee(dataAmount);
+  // console.log("fee: ", fee[0].toString());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
