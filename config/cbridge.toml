@@ -12,7 +12,7 @@ msgbus = "0xF25170F86E4291a99a9A560032Fe9948b8BcFBB2"
 [[multichain]]
 chainID = 97
 name = "BSC Testnet"
-gateway = "https://data-seed-prebsc-1-s1.binance.org:8545/"
+gateway = "https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8"
 blkinterval = 3
 blkdelay = 8
 maxblkdelta = 5000

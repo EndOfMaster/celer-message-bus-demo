@@ -10,4 +10,5 @@ package-lock.json
 cache
 artifacts
 
-.keystore.json
+keystore.json
+executor
