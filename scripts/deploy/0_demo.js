@@ -8,11 +8,11 @@ module.exports = async ({ getNamedAccounts, getChainId, deployments }) => {
     const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
 
-    await deploy('Sender', {
+    await deploy('Demo', {
         from: deployer,
         args: [messageBus[chainId]],
         log: true,
         skipIfAlreadyDeployed: true,
     });
 };
-module.exports.tags = ['Sender'];
+module.exports.tags = ['Demo'];

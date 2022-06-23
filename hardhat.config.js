@@ -37,7 +37,11 @@ function getChainConfig(network) {
  */
 module.exports = {
   networks: {
-    goerli: getChainConfig('goerli'),
+    goerli: {
+      url: 'https://rpc.goerli.mudit.blog',
+      accounts: [`${privateKey}`],
+      chainId: 5,
+    },
     bscTest: {
       url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
       accounts: [`${privateKey}`],

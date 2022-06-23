@@ -15,11 +15,11 @@ signer_keystore = "/Users/end-of-master/EndOfMaster/celer-message-bus-demo/confi
 signer_passphrase = "dfwork1015"  #password
 [[service.contracts]]
 chain_id = 5
-address = "0x30ccfb28cF4fe0acd164b898aaB844c3f62585b4" # this contract address is used to query messages from SGN
+address = "0x4a20059c1A9Ae78f8bD49F07c3AFBCceB7da7B98" # this contract address is used to query messages from SGN
 # allow_sender_groups = ["my-contracts"] # mount sender groups here. if not configured, sender checking is skipped
 [[service.contracts]]
 chain_id = 97
-address = "0x0A92953caa6283956d32d0Fd1f057cB328389c55"
+address = "0xBC0ec5b28A574250221478a52afB9D3bc398597f"
 # allow_sender_groups = ["my-contracts"] # you can also list multiple sender groups. message execution is allowed if a sender is found in ANY of the sender groups
 # [[service.contract_sender_groups]]
 # name = "my-contracts"
