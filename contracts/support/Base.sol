@@ -34,42 +34,28 @@ abstract contract Base is IBaseStruct {
         address //_executor Address to trigger execute
     ) external onlyMessageBus returns (ExecutionStatus) {
         TransferData memory _data = abi.decode(_message, (TransferData));
-        if (_data._type == 1) {
-            //TODO swap get new amount
-            uint256 _newAmount = _amount;
+        if (_data.back) {
+            bytes memory _sendData = abi.encode(TransferData({ back: false, maxSlippage: _data.maxSlippage, to: _data.to }));
+            uint256 _fee = IMessageBus(messageBus).calcFee(_sendData);
 
-            if (_data.back) {
-                bytes memory _sendData = abi.encode(
-                    TransferData({ _type: 2, back: false, swapFromToken: address(0), swapData: new bytes(0), swapToToken: address(0), maxSlippage: _data.maxSlippage, to: _data.to })
-                );
-                uint256 _fee = IMessageBus(messageBus).calcFee(_sendData);
-
-                bytes32 transferId = MessageSenderLib.sendMessageWithTransfer(
-                    _sender,
-                    _token, //test use original token
-                    _amount, //test use original amount
-                    _srcChainId,
-                    uint64(block.timestamp),
-                    _data.maxSlippage,
-                    _sendData, // message
-                    MsgDataTypes.BridgeSendType.Liquidity, // the bridge type, we are using liquidity bridge at here
-                    messageBus,
-                    _fee
-                );
-                emit CrossChain(transferId, _data.to, _token, _amount, _srcChainId);
-            } else {
-                IERC20(_data.swapToToken).transfer(_data.to, _newAmount);
-                emit Transfer2Address(_data.to, _data.swapToToken, _newAmount);
-                return ExecutionStatus.Success;
-            }
-            return ExecutionStatus.Success;
-        }
-        if (_data._type == 2) {
+            bytes32 transferId = MessageSenderLib.sendMessageWithTransfer(
+                _sender,
+                _token, //test use original token
+                _amount, //test use original amount
+                _srcChainId,
+                uint64(block.timestamp),
+                _data.maxSlippage,
+                _sendData, // message
+                MsgDataTypes.BridgeSendType.Liquidity, // the bridge type, we are using liquidity bridge at here
+                messageBus,
+                _fee
+            );
+            emit CrossChain(transferId, _data.to, _token, _amount, _srcChainId);
+        } else {
             IERC20(_token).transfer(_data.to, _amount);
             emit Transfer2Address(_data.to, _token, _amount);
-            return ExecutionStatus.Success;
         }
-        return ExecutionStatus.Fail;
+        return ExecutionStatus.Success;
     }
 
     //Bridge error call this

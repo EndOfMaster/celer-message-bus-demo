@@ -20,11 +20,7 @@ interface IBaseStruct {
     // ------------ this demo use ------------
 
     struct TransferData {
-        uint8 _type; //1: swap, 2: only transfer
-        bool back;  //If true returns the source chain
-        address swapFromToken;
-        bytes swapData;
-        address swapToToken;
+        bool back; //If true returns the source chain
         uint32 maxSlippage;
         address to;
     }

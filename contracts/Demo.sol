@@ -15,22 +15,11 @@ contract Demo is Base {
         address _token,
         uint256 _amount,
         uint64 _dstChainId,
-        uint32 _maxSlippage,
-        address _swapFrom,
-        bytes memory _swapData,
-        address _swapTo
+        uint32 _maxSlippage
     ) external payable {
         IERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
 
-        TransferData memory _transferData = TransferData({
-            _type: 1,
-            back: true,
-            swapFromToken: _swapFrom,
-            swapData: _swapData,
-            swapToToken: _swapTo,
-            maxSlippage: _maxSlippage,
-            to: msg.sender
-        });
+        TransferData memory _transferData = TransferData({ back: true, maxSlippage: _maxSlippage, to: msg.sender });
 
         (uint256 _fee, bytes memory _sendData) = getFee(_transferData);
 

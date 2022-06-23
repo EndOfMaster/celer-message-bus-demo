@@ -6,7 +6,7 @@ const zeroAddress = ethers.constants.AddressZero
 
 const chainId = {
   goerli: 5,
-  'bscTest': 97
+  bscTest: 97
 }
 
 async function main() {
@@ -28,19 +28,20 @@ async function main() {
   await erc20.approve(senderAddress, _amount);
 
   //bscTest Demo
-  let _receiver = '0x6497231b99f0fC16C94eADC6bfC1a43a43C6bc00'
+  let _receiver = '0xf73932254090dab19700e5a2D61df2CCDE6fCC11'
   let _dstChainId = chainId.bscTest
   let _maxSlippage = 50000   //5%
 
-  let fee = (await sender.getFee([1, true, zeroAddress, '0x', zeroAddress, _maxSlippage, account.address]))[0];
+  let fee = (await sender.getFee([true, _maxSlippage, account.address]))[0];
   console.log("fee: ", fee.toString());
 
   //BridgeSendType.Liquidity = 1
   // let transferId = await sender.callStatic.getLiquidityTransferId(_receiver, _token, _amount, _dstChainId, _nonce);
   // console.log("transferId: ", transferId);
 
-  let data = await sender.send(_receiver, _token, _amount, _dstChainId, _maxSlippage, zeroAddress, '0x', zeroAddress, { value: fee });
-  console.log(data);
+  let data = await sender.send(_receiver, _token, _amount, _dstChainId, _maxSlippage, { value: fee });
+
+  console.log(await data.wait());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
