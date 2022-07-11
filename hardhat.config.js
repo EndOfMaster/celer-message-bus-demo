@@ -1,9 +1,12 @@
 require("@nomiclabs/hardhat-waffle");
 require("dotenv").config()
 require('hardhat-deploy');
+require("@nomiclabs/hardhat-etherscan");
 
 const privateKey = process.env.PRIVATE_KEY ?? "NO_PRIVATE_KEY";
+const privateKey2 = process.env.PRIVATE_KEY2 ?? "NO_PRIVATE_KEY2";
 const infuraId = process.env.INFURA_ID ?? "INFURA_ID";
+const bscScanKey = process.env.BSC_SCAN_KEY ?? "BSC_SCAN_KEY";
 
 const chainIds = {
   goerli: 5,
@@ -23,7 +26,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 function getChainConfig(network) {
   const url = `https://${network}.infura.io/v3/${infuraId}`;
   return {
-    accounts: [`${privateKey}`],
+    accounts: [`${privateKey}`, `${privateKey2}`],
     chainId: chainIds[network],
     url,
   };
@@ -38,9 +41,20 @@ function getChainConfig(network) {
 module.exports = {
   networks: {
     goerli: getChainConfig('goerli'),
+    goerli2: getChainConfig('goerli'),
     bscTest: {
       url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
-      accounts: [`${privateKey}`],
+      accounts: [`${privateKey}`, `${privateKey2}`],
+      chainId: 97,
+    },
+    bscTest2: {
+      url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
+      accounts: [`${privateKey}`, `${privateKey2}`],
+      chainId: 97,
+    },
+    bscTestnet: {
+      url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
+      accounts: [`${privateKey}`, `${privateKey2}`],
       chainId: 97,
     }
   },
@@ -67,5 +81,10 @@ module.exports = {
   },
   namedAccounts: {
     deployer: 0
+  },
+  etherscan: {
+    apiKey: {
+      bscTestnet: bscScanKey,
+    }
   }
 };

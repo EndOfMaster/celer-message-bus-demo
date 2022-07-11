@@ -10,38 +10,38 @@ const chainId = {
 }
 
 async function main() {
-  //test sender in goerli
-  const senderAddress = (await deployments.get('Demo')).address;
-  console.log("senderAddress: ", senderAddress);
-  const Sender = await ethers.getContractFactory("Demo");
-  const sender = Sender.attach(senderAddress);
+  //test demo in goerli
+  const demoAddress = (await deployments.get('Demo')).address;
+  console.log("demoAddress: ", demoAddress);
+  const Demo = await ethers.getContractFactory("Demo");
+  const demo = Demo.attach(demoAddress);
 
   let _token = '0xf4B2cbc3bA04c478F0dC824f4806aC39982Dce73' //goerli cbrige usdt
   let _amount = BigNumber.from(10).pow(6).mul(101)
 
   const erc20 = await ethers.getContractAt("IERC20", _token);
-  const [account] = await ethers.getSigners()
+  const [account, account2] = await ethers.getSigners()
 
-  let balance = await erc20.balanceOf(account.address);
+  let balance = await erc20.balanceOf(account2.address);
   console.log("balance1: ", balance.toString());
 
-  await erc20.approve(senderAddress, _amount);
+  await (await erc20.connect(account2).approve(demoAddress, _amount)).wait();
 
   //bscTest Demo
-  let _receiver = '0xf73932254090dab19700e5a2D61df2CCDE6fCC11'
+  let _receiver = '0x60c60040f64Bff7698645c821C960d05E34b6526'
   let _dstChainId = chainId.bscTest
   let _maxSlippage = 50000   //5%
 
-  let fee = (await sender.getFee([true, _maxSlippage, account.address]))[0];
+  let fee = (await demo.getFee([true, _maxSlippage, account.address]))[0];
   console.log("fee: ", fee.toString());
 
   //BridgeSendType.Liquidity = 1
-  // let transferId = await sender.callStatic.getLiquidityTransferId(_receiver, _token, _amount, _dstChainId, _nonce);
+  // let transferId = await demo.callStatic.getLiquidityTransferId(_receiver, _token, _amount, _dstChainId, _nonce);
   // console.log("transferId: ", transferId);
 
-  let data = await sender.send(_receiver, _token, _amount, _dstChainId, _maxSlippage, { value: fee });
-
-  console.log(await data.wait());
+  let data = await demo.connect(account2).send(_receiver, _token, _amount, _dstChainId, _maxSlippage, { value: fee });
+  let events = (await data.wait()).events;
+  console.log(events[events.length - 1].data);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

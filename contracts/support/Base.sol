@@ -71,7 +71,7 @@ abstract contract Base is IBaseStruct {
 
     TransferRequest public transfer2;
 
-    //srcChain Transaction error call this
+    //Target Chain Transaction error call this
     function executeMessageWithTransferFallback(
         address, //_sender
         address _token,

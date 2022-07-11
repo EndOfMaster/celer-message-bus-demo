@@ -1,9 +1,9 @@
-# [executor]
-# enable_auto_refund = false
-# [executor.retry]
-# initial_backoff_seconds = 30 # default 30
-# interval_seconds = 30 # default 30
-# scaling_factor = 1 # default 1
+[executor]
+enable_auto_refund = true
+[executor.retry]
+initial_backoff_seconds = 1 # default 30
+interval_seconds = 1 # default 30
+scaling_factor = 1 # default 1
 
 # [server] # optional
 # enable = true # default false
@@ -15,18 +15,10 @@ signer_keystore = "/Users/end-of-master/EndOfMaster/celer-message-bus-demo/confi
 signer_passphrase = "dfwork1015"  #password
 [[service.contracts]]
 chain_id = 5
-address = "0xcE65Cf26Da4739319f045A5706fB40C0f97aC53d" # this contract address is used to query messages from SGN
-# allow_sender_groups = ["my-contracts"] # mount sender groups here. if not configured, sender checking is skipped
+address = "0x450F9F7De6FC5F1Edc5A7cBeA6549Fd124977ccb" # this contract address is used to query messages from SGN
 [[service.contracts]]
 chain_id = 97
-address = "0xf73932254090dab19700e5a2D61df2CCDE6fCC11"
-# allow_sender_groups = ["my-contracts"] # you can also list multiple sender groups. message execution is allowed if a sender is found in ANY of the sender groups
-# [[service.contract_sender_groups]]
-# name = "my-contracts"
-# allow = [
-#   { chain_id = 5, address = "<app-contract-address>" },
-#   { chain_id = 97, address = "<app-contract-address>" },
-# ]
+address = "0x60c60040f64Bff7698645c821C960d05E34b6526"
 
 [sgnd]
 sgn_grpc = "cbridge-v2-test.celer.network:9094"
