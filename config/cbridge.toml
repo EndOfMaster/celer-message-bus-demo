@@ -14,7 +14,7 @@ addgasestimateratio = 0.3
 [[multichain]]
 chainID = 97
 name = "BSC Testnet"
-gateway = "https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8"
+gateway = "https://data-seed-prebsc-1-s1.binance.org:8545"
 blkinterval = 3
 blkdelay = 8
 maxblkdelta = 5000
@@ -24,3 +24,4 @@ ptbridge = "0xcb1dB69399755Cf8A9EbE8A3033f3082793b67eB"
 msgbus = "0xAd204986D6cB67A5Bc76a3CB8974823F43Cb9AAA"
 addgasgwei = 2
 addgasestimateratio = 0.3
+gaslimit=2000000

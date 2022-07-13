@@ -33,54 +33,61 @@ abstract contract Base is IBaseStruct {
         bytes calldata _message, //send data
         address //_executor Address to trigger execute
     ) external onlyMessageBus returns (ExecutionStatus) {
-        TransferData memory _data = abi.decode(_message, (TransferData));
-        if (_data.back) {
-            bytes memory _sendData = abi.encode(TransferData({ back: false, maxSlippage: _data.maxSlippage, to: _data.to }));
-            uint256 _fee = IMessageBus(messageBus).calcFee(_sendData);
+        // TransferData memory _data = abi.decode(_message, (TransferData));
+        // if (_data.back) {
+        //     bytes memory _sendData = abi.encode(TransferData({ back: false, maxSlippage: _data.maxSlippage, to: _data.to }));
+        //     uint256 _fee = IMessageBus(messageBus).calcFee(_sendData);
 
-            bytes32 transferId = MessageSenderLib.sendMessageWithTransfer(
-                _sender,
-                _token, //test use original token
-                _amount, //test use original amount
-                _srcChainId,
-                uint64(block.timestamp),
-                _data.maxSlippage,
-                _sendData, // message
-                MsgDataTypes.BridgeSendType.Liquidity, // the bridge type, we are using liquidity bridge at here
-                messageBus,
-                _fee
-            );
-            emit CrossChain(transferId, _data.to, _token, _amount, _srcChainId);
-        } else {
-            IERC20(_token).transfer(_data.to, _amount);
-            emit Transfer2Address(_data.to, _token, _amount);
-        }
+        //     bytes32 transferId = MessageSenderLib.sendMessageWithTransfer(
+        //         _sender,
+        //         _token, //test use original token
+        //         _amount, //test use original amount
+        //         _srcChainId,
+        //         uint64(block.timestamp),
+        //         _data.maxSlippage,
+        //         _sendData, // message
+        //         MsgDataTypes.BridgeSendType.Liquidity, // the bridge type, we are using liquidity bridge at here
+        //         messageBus,
+        //         _fee
+        //     );
+        //     emit CrossChain(transferId, _data.to, _token, _amount, _srcChainId);
+        // } else {
+        //     IERC20(_token).transfer(_data.to, _amount);
+        //     emit Transfer2Address(_data.to, _token, _amount);
+        // }
+        require(false, "aaa");
         return ExecutionStatus.Success;
     }
+
+    TransferData public transfer;
 
     //Bridge error call this
     function executeMessageWithTransferRefund(
-        address _token,
-        uint256 _amount,
-        bytes calldata _message
+        address _sender,
+        uint64 _srcChainId,
+        bytes memory _message,
+        address // executor
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory _transfer = abi.decode(_message, (TransferRequest));
-        IERC20(_token).safeTransfer(_transfer.sender, _amount);
+        TransferData memory _transfer = abi.decode(_message, (TransferData));
+        // IERC20(_token).safeTransfer(_transfer.sender, _amount);
+        transfer = _transfer;
         return ExecutionStatus.Success;
     }
 
-    TransferRequest public transfer2;
+    TransferData public transfer2;
 
     //Target Chain Transaction error call this
     function executeMessageWithTransferFallback(
-        address, //_sender
+        address _sender,
         address _token,
         uint256 _amount,
-        uint64, //_srcChainId
-        bytes memory _message
+        uint64 _srcChainId,
+        bytes memory _message,
+        address // executor
     ) external payable onlyMessageBus returns (ExecutionStatus) {
-        TransferRequest memory _transfer = abi.decode((_message), (TransferRequest));
-        IERC20(_token).safeTransfer(_transfer.sender, _amount);
+        TransferData memory _transfer = abi.decode((_message), (TransferData));
+        // IERC20(_token).safeTransfer(_transfer.sender, _amount);
+        transfer = _transfer;
         return ExecutionStatus.Success;
     }
 

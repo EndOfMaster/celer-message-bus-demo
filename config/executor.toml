@@ -18,7 +18,7 @@ chain_id = 5
 address = "0x450F9F7De6FC5F1Edc5A7cBeA6549Fd124977ccb" # this contract address is used to query messages from SGN
 [[service.contracts]]
 chain_id = 97
-address = "0x60c60040f64Bff7698645c821C960d05E34b6526"
+address = "0xD3690FF87908907a3Bc6638bb73b0E8c905A7c7F"
 
 [sgnd]
 sgn_grpc = "cbridge-v2-test.celer.network:9094"

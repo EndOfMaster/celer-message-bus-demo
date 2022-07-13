@@ -28,7 +28,7 @@ async function main() {
   await (await erc20.connect(account2).approve(demoAddress, _amount)).wait();
 
   //bscTest Demo
-  let _receiver = '0x60c60040f64Bff7698645c821C960d05E34b6526'
+  let _receiver = '0xD3690FF87908907a3Bc6638bb73b0E8c905A7c7F'
   let _dstChainId = chainId.bscTest
   let _maxSlippage = 50000   //5%
 

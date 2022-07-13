@@ -48,7 +48,7 @@ module.exports = {
       chainId: 97,
     },
     bscTest2: {
-      url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       accounts: [`${privateKey}`, `${privateKey2}`],
       chainId: 97,
     },
@@ -56,7 +56,10 @@ module.exports = {
       url: 'https://bsc-testnet.nodereal.io/v1/60abea8408e44c1282428c2343b4e1d8',
       accounts: [`${privateKey}`, `${privateKey2}`],
       chainId: 97,
-    }
+    },
+    'truffle-dashboard': {
+      url: "http://localhost:24012/rpc",
+    },
   },
   solidity: {
     compilers: [

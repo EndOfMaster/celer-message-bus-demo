@@ -47,5 +47,5 @@ docker run -d \
 ```
 ### 3.run executor
 ```shell
-executor start --loglevel debug --home ./
+./executor start --loglevel debug --home ./
 ```
