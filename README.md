@@ -44,6 +44,8 @@ docker run -d \
     cockroachdb/cockroach start \
     --insecure \
     --join=cockroachdb
+
+docker exec -it cockroachdb ./cockroach init --insecure
 ```
 ### 3.run executor
 ```shell
